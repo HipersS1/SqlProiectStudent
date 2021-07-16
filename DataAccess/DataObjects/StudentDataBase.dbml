@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="StudentDataBase" Class="StudentDataBaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-0SKN5UJ\SQLEXPRESS;Initial Catalog=StudentDataBase;Integrated Security=True" SettingsObjectName="SqlProiectStudent.Properties.Settings" SettingsPropertyName="StudentDataBaseConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.MaterieTable" Member="MaterieTables">
+    <Type Name="MaterieTable">
+      <Column Name="IDMaterie" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Materia" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="An" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Semestru" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="MaterieTable_NoteTable" Member="NoteTables" ThisKey="IDMaterie" OtherKey="IDMaterie" Type="NoteTable" />
+    </Type>
+  </Table>
+  <Table Name="dbo.NoteTable" Member="NoteTables">
+    <Type Name="NoteTable">
+      <Column Name="IDStudent" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IDMaterie" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NotaLaborator" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="NotaExamen" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Association Name="MaterieTable_NoteTable" Member="MaterieTable" ThisKey="IDMaterie" OtherKey="IDMaterie" Type="MaterieTable" IsForeignKey="true" />
+      <Association Name="StudentTable_NoteTable" Member="StudentTable" ThisKey="IDStudent" OtherKey="IDStudent" Type="StudentTable" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.StudentTable" Member="StudentTables">
+    <Type Name="StudentTable">
+      <Column Name="IDStudent" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Nume" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Prenume" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CNP" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="An" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="StudentTable_NoteTable" Member="NoteTables" ThisKey="IDStudent" OtherKey="IDStudent" Type="NoteTable" />
+    </Type>
+  </Table>
+</Database>
