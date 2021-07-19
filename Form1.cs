@@ -8,21 +8,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using static SqlProiectStudent.Functii;
+
 
 namespace SqlProiectStudent
 {
     public partial class Form1 : Form
     {
+        SqlConnection connection;
+        string strStudent, strMaterie;
         int ButtonTag;
         public Form1()
         {
             InitializeComponent();
+            connection = new SqlConnection("Data Source=DESKTOP-0SKN5UJ\\SQLEXPRESS;Initial Catalog=StudentDataBase;Integrated Security=True");
+            strStudent = "select IDStudent, Nume, Prenume, CNP, An from StudentTable";
+            strMaterie = "select IDMaterie, Materia, An, Semestru from MaterieTable";
         }
 
         private void buttonStudent_Click(object sender, EventArgs e)
         {
-            string afisare = "select IDStudent, Nume, Prenume, CNP, An from StudentTable";
-            AfisareTabelInfo(afisare);
+            AfisareTabelInfo(strStudent, connection, dataGridTable);
             ButtonTag = 1;
             buttonStudent.BackColor = Color.Blue;
             buttonMaterie.BackColor = Color.White;
@@ -30,25 +36,10 @@ namespace SqlProiectStudent
 
         private void buttonMaterie_Click(object sender, EventArgs e)
         {
-            string afisare = "select IDMaterie, Materia, An, Semestru from MaterieTable";
-            AfisareTabelInfo(afisare);
+            AfisareTabelInfo(strMaterie, connection, dataGridTable);
             ButtonTag = 2;
             buttonStudent.BackColor = Color.White;
             buttonMaterie.BackColor = Color.Blue;
-
-        }
-        public void AfisareTabelInfo(string c)
-        {
-            dataGridTable.DataSource = null;
-            using (SqlConnection connection = new SqlConnection("Data Source=DESKTOP-0SKN5UJ\\SQLEXPRESS;Initial Catalog=StudentDataBase;Integrated Security=True"))
-            {
-                connection.Open();
-                SqlDataAdapter sqlData = new SqlDataAdapter(c, connection);
-                DataTable dataTable = new DataTable();
-                sqlData.Fill(dataTable);
-
-                dataGridTable.DataSource = dataTable;
-            }
         }
 
         private void buttonAdauga_Click(object sender, EventArgs e)
@@ -60,11 +51,11 @@ namespace SqlProiectStudent
                 this.Hide();
                 form.ShowDialog();
                 this.Show();
+                if (ButtonTag == 1)
+                    AfisareTabelInfo(strStudent, connection, dataGridTable);
+                if (ButtonTag == 2)
+                    AfisareTabelInfo(strMaterie, connection, dataGridTable);
             }
-            if (ButtonTag == 1)
-                AfisareTabelInfo("select IDStudent, Nume, Prenume, CNP, An from StudentTable");
-            if (ButtonTag == 2)
-                AfisareTabelInfo("select IDMaterie, Materia, An, Semestru from MaterieTable");
         }
 
         private void dataGridTable_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -78,13 +69,16 @@ namespace SqlProiectStudent
                 obj.Append(string.Format("{0},", cell.Value));
             }
             obj.Remove(obj.Length-1, 1);
-            //MessageBox.Show(obj.ToString());
-            ///
+
             using (FormModificare form = new FormModificare(ButtonTag, obj.ToString()))
             {
                 this.Hide();
                 form.ShowDialog();
                 this.Show();
+                if (ButtonTag == 1)
+                    AfisareTabelInfo(strStudent, connection, dataGridTable);
+                if (ButtonTag == 2)
+                    AfisareTabelInfo(strMaterie, connection, dataGridTable);
             }
         }
     }

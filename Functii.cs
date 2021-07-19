@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using SqlProiectStudent.DataAccess.DataObjects;
 using System.Windows.Forms;
+using System.Data;
 
 namespace SqlProiectStudent
 {
@@ -30,6 +31,19 @@ namespace SqlProiectStudent
                 if (i == 0)
                     MessageBox.Show("Eroare la introducerea materiilor");
             }
+            connection.Close();
+        }
+
+
+        public static void AfisareTabelInfo(string c, SqlConnection connection, DataGridView dataGridTable)
+        {
+            dataGridTable.DataSource = null;
+            connection.Open();
+            SqlDataAdapter sqlData = new SqlDataAdapter(c, connection);
+            DataTable dataTable = new DataTable();
+            sqlData.Fill(dataTable);
+
+            dataGridTable.DataSource = dataTable;
             connection.Close();
         }
     }

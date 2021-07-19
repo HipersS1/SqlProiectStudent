@@ -13,12 +13,13 @@ using static SqlProiectStudent.Functii;
 
 namespace SqlProiectStudent
 {
+
     public partial class FormModificare : Form
     {
         StudentDataBaseDataContext studentDataContext;
         SqlConnection connection;
         int verificareAn;
-
+        int idStudent;
 
         public FormModificare()
         {
@@ -39,7 +40,7 @@ namespace SqlProiectStudent
                         " FROM NoteTable" +
                         " INNER JOIN MaterieTable on MaterieTable.IDMaterie = NoteTable.IDMaterie" +
                         " Where NoteTable.IDStudent = " + vectStr[0];
-                AfisareTabelInfo(c);
+                AfisareTabelInfo(c, connection, dataGridTable);
                 txtBoxNume.Text = vectStr[1];
                 txtBoxPrenume.Text = vectStr[2];
                 txtBoxCNP.Text = vectStr[3];
@@ -51,7 +52,10 @@ namespace SqlProiectStudent
                 comboBoxMaterii.DataSource = (from MaterieTable in studentDataContext.MaterieTables
                                               where MaterieTable.An.ToString() == txtBoxAn.Text
                                               select MaterieTable.Materia).ToList();
-                //dfg
+                var studentID = (from StudentTable in studentDataContext.StudentTables
+                                 where txtBoxCNP.Text == StudentTable.CNP
+                                 select StudentTable.IDStudent).FirstOrDefault();
+                idStudent = studentID;
             }
             if (Mode == 2)
                 panelMaterie.Visible = true;
@@ -123,25 +127,13 @@ namespace SqlProiectStudent
         {
             this.Close();
         }
-        public void AfisareTabelInfo(string c)
-        {
-            dataGridTable.DataSource = null;
-            using (SqlConnection connection = new SqlConnection("Data Source=DESKTOP-0SKN5UJ\\SQLEXPRESS;Initial Catalog=StudentDataBase;Integrated Security=True"))
-            {
-                connection.Open();
-                SqlDataAdapter sqlData = new SqlDataAdapter(c, connection);
-                DataTable dataTable = new DataTable();
-                sqlData.Fill(dataTable);
-
-                dataGridTable.DataSource = dataTable;
-            }
-        }
+        
 
         private void buttonModifica_Click(object sender, EventArgs e)
         {
             SqlCommand command;
             var studentID = (from StudentTable in studentDataContext.StudentTables
-                    where txtBoxCNP.Text == StudentTable.CNP
+                     where txtBoxCNP.Text == StudentTable.CNP
                      select StudentTable.IDStudent).FirstOrDefault();
             var materieID = (from MaterieTable in studentDataContext.MaterieTables
                      where comboBoxMaterii.SelectedItem.ToString() == MaterieTable.Materia
@@ -160,8 +152,6 @@ namespace SqlProiectStudent
             }
 
             int i = 0;
-            
-
 
             if (panelStudent.Visible)
             {
@@ -194,6 +184,45 @@ namespace SqlProiectStudent
             txtBoxNotaExamen.Clear();
             txtBoxNotaLaborator.Clear();
         }
-    }
 
+        private void dataGridTable_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            var editedCellLaborator = this.dataGridTable.Rows[e.RowIndex].Cells["NotaLaborator"];
+            var editedCellExamen = this.dataGridTable.Rows[e.RowIndex].Cells["NotaExamen"];
+            var newValueLaborator = editedCellLaborator.Value;
+            var newValueExamen = editedCellExamen.Value;
+
+            var studentID = (from StudentTable in studentDataContext.StudentTables
+                             where txtBoxCNP.Text == StudentTable.CNP
+                             select StudentTable.IDStudent).FirstOrDefault();
+            if (newValueLaborator is null)
+                newValueLaborator = "NULL";
+            if (newValueExamen is null)
+                newValueExamen = "NULL";
+
+            SqlCommand command = new SqlCommand("update NoteTable set NotaLaborator = @notaLaborator, NotaExamen = @notaExamen where IDStudent = @idStudent and IDMaterie = @idMaterie", connection);
+            command.Parameters.AddWithValue("@idStudent", studentID);
+            command.Parameters.AddWithValue("@idMaterie", Convert.ToInt32(this.dataGridTable.Rows[e.RowIndex].Cells[0].Value));
+            command.Parameters.AddWithValue("@notaLaborator", newValueLaborator);
+            command.Parameters.AddWithValue("@notaExamen", newValueExamen);
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
+
+        private void eliminaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            connection.Open();
+            using (SqlCommand command = new SqlCommand("DELETE FROM NoteTable WHERE IDStudent = " + idStudent, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            using (SqlCommand command = new SqlCommand("DELETE FROM StudentTable WHERE IDStudent = " + idStudent, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
+        }
+    }
 }

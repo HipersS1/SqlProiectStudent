@@ -30,6 +30,7 @@ namespace SqlProiectStudent
         private void InitializeComponent()
         {
             this.panelStudent = new System.Windows.Forms.Panel();
+            this.buttonModificaStudent = new System.Windows.Forms.Button();
             this.txtBoxNotaExamen = new System.Windows.Forms.TextBox();
             this.txtBoxNotaLaborator = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -55,10 +56,13 @@ namespace SqlProiectStudent
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonReturn = new System.Windows.Forms.Button();
             this.dataGridTable = new System.Windows.Forms.DataGridView();
-            this.buttonModificaStudent = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.modificareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stergereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelStudent.SuspendLayout();
             this.panelMaterie.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTable)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelStudent
@@ -79,11 +83,21 @@ namespace SqlProiectStudent
             this.panelStudent.Controls.Add(this.label2);
             this.panelStudent.Controls.Add(this.label1);
             this.panelStudent.Controls.Add(this.labelNume);
-            this.panelStudent.Location = new System.Drawing.Point(12, 12);
+            this.panelStudent.Location = new System.Drawing.Point(12, 31);
             this.panelStudent.Name = "panelStudent";
-            this.panelStudent.Size = new System.Drawing.Size(1039, 145);
+            this.panelStudent.Size = new System.Drawing.Size(1039, 146);
             this.panelStudent.TabIndex = 0;
             this.panelStudent.Visible = false;
+            // 
+            // buttonModificaStudent
+            // 
+            this.buttonModificaStudent.Location = new System.Drawing.Point(470, 108);
+            this.buttonModificaStudent.Name = "buttonModificaStudent";
+            this.buttonModificaStudent.Size = new System.Drawing.Size(103, 27);
+            this.buttonModificaStudent.TabIndex = 17;
+            this.buttonModificaStudent.Text = "Modifica";
+            this.buttonModificaStudent.UseVisualStyleBackColor = true;
+            this.buttonModificaStudent.Click += new System.EventHandler(this.buttonModifica_Click);
             // 
             // txtBoxNotaExamen
             // 
@@ -150,7 +164,7 @@ namespace SqlProiectStudent
             this.panelMaterie.Controls.Add(this.label5);
             this.panelMaterie.Controls.Add(this.label6);
             this.panelMaterie.Controls.Add(this.label7);
-            this.panelMaterie.Location = new System.Drawing.Point(704, 3);
+            this.panelMaterie.Location = new System.Drawing.Point(704, 4);
             this.panelMaterie.Name = "panelMaterie";
             this.panelMaterie.Size = new System.Drawing.Size(409, 142);
             this.panelMaterie.TabIndex = 11;
@@ -266,7 +280,7 @@ namespace SqlProiectStudent
             // 
             // buttonAddStudent
             // 
-            this.buttonAddStudent.Location = new System.Drawing.Point(405, 371);
+            this.buttonAddStudent.Location = new System.Drawing.Point(12, 381);
             this.buttonAddStudent.Name = "buttonAddStudent";
             this.buttonAddStudent.Size = new System.Drawing.Size(108, 46);
             this.buttonAddStudent.TabIndex = 8;
@@ -276,7 +290,7 @@ namespace SqlProiectStudent
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(519, 371);
+            this.buttonClear.Location = new System.Drawing.Point(116, 381);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(108, 46);
             this.buttonClear.TabIndex = 9;
@@ -286,7 +300,7 @@ namespace SqlProiectStudent
             // 
             // buttonReturn
             // 
-            this.buttonReturn.Location = new System.Drawing.Point(633, 371);
+            this.buttonReturn.Location = new System.Drawing.Point(494, 381);
             this.buttonReturn.Name = "buttonReturn";
             this.buttonReturn.Size = new System.Drawing.Size(108, 46);
             this.buttonReturn.TabIndex = 10;
@@ -297,22 +311,39 @@ namespace SqlProiectStudent
             // dataGridTable
             // 
             this.dataGridTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridTable.Location = new System.Drawing.Point(13, 164);
+            this.dataGridTable.Location = new System.Drawing.Point(12, 183);
             this.dataGridTable.Name = "dataGridTable";
             this.dataGridTable.RowHeadersWidth = 51;
             this.dataGridTable.RowTemplate.Height = 24;
             this.dataGridTable.Size = new System.Drawing.Size(1038, 201);
             this.dataGridTable.TabIndex = 12;
+            this.dataGridTable.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTable_CellValueChanged);
             // 
-            // buttonModificaStudent
+            // menuStrip1
             // 
-            this.buttonModificaStudent.Location = new System.Drawing.Point(470, 108);
-            this.buttonModificaStudent.Name = "buttonModificaStudent";
-            this.buttonModificaStudent.Size = new System.Drawing.Size(103, 27);
-            this.buttonModificaStudent.TabIndex = 17;
-            this.buttonModificaStudent.Text = "Modifica";
-            this.buttonModificaStudent.UseVisualStyleBackColor = true;
-            this.buttonModificaStudent.Click += new System.EventHandler(this.buttonModifica_Click);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.modificareToolStripMenuItem,
+            this.stergereToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1063, 28);
+            this.menuStrip1.TabIndex = 13;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // modificareToolStripMenuItem
+            // 
+            this.modificareToolStripMenuItem.Name = "modificareToolStripMenuItem";
+            this.modificareToolStripMenuItem.Size = new System.Drawing.Size(72, 24);
+            this.modificareToolStripMenuItem.Text = "Elimina";
+            this.modificareToolStripMenuItem.Click += new System.EventHandler(this.eliminaToolStripMenuItem_Click);
+            // 
+            // stergereToolStripMenuItem
+            // 
+            this.stergereToolStripMenuItem.Name = "stergereToolStripMenuItem";
+            this.stergereToolStripMenuItem.Size = new System.Drawing.Size(82, 24);
+            this.stergereToolStripMenuItem.Text = "Modifica";
+            this.stergereToolStripMenuItem.Click += new System.EventHandler(this.buttonModifica_Click);
             // 
             // FormModificare
             // 
@@ -324,6 +355,8 @@ namespace SqlProiectStudent
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.panelStudent);
             this.Controls.Add(this.buttonAddStudent);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormModificare";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormAdaugare";
@@ -332,7 +365,10 @@ namespace SqlProiectStudent
             this.panelMaterie.ResumeLayout(false);
             this.panelMaterie.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTable)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -365,5 +401,8 @@ namespace SqlProiectStudent
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonModificaStudent;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem modificareToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stergereToolStripMenuItem;
     }
 }

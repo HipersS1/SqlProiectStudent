@@ -38,22 +38,32 @@ namespace SqlProiectStudent
         {
             SqlCommand command;
             int i = 0;
+            int ValidID = 1;
+            var nextValidID = false;
             if (panelStudent.Visible)
             {
                 command = new SqlCommand("insert into StudentTable values (@idStudent, @nume, @prenume, @cnp, @an)", connection);
-                SqlCommand cmdCount = new SqlCommand("select count(*) from StudentTable", connection);
 
-                connection.Open();
-                int RecordCount = Convert.ToInt32(cmdCount.ExecuteScalar());
+                do
+                {
+                    nextValidID = (from StudentTable in studentDataContext.StudentTables
+                                   where StudentTable.IDStudent == ValidID
+                                   select StudentTable).Any();
+                    if (nextValidID == true)
+                        ValidID++;
+                } while (nextValidID == true);
+                
 
-                command.Parameters.AddWithValue("@idStudent", ++RecordCount);
+                command.Parameters.AddWithValue("@idStudent", ValidID);
                 command.Parameters.AddWithValue("@nume", txtBoxNume.Text.Trim());
                 command.Parameters.AddWithValue("@prenume", txtBoxPrenume.Text.Trim());
                 command.Parameters.AddWithValue("@cnp", txtBoxCNP.Text.Trim());
                 command.Parameters.AddWithValue("@an", txtBoxAn.Text.Trim());
+                connection.Open();
                 i = command.ExecuteNonQuery();
+                connection.Close();
                 ClearTextBox(panelStudent);
-                AdaugareMateriiStudent(RecordCount, connection, studentDataContext);
+                AdaugareMateriiStudent(ValidID, connection, studentDataContext);
             }
             else if (panelMaterie.Visible)
             {
@@ -68,10 +78,10 @@ namespace SqlProiectStudent
                 command.Parameters.AddWithValue("@an", txtBoxAnMaterie.Text.Trim());
                 command.Parameters.AddWithValue("@semestru", txtBoxSemestruMaterie.Text.Trim());
                 i = command.ExecuteNonQuery();
+                connection.Close();
                 ClearTextBox(panelMaterie);
             }
 
-            connection.Close();
             if (i != 0)
                 MessageBox.Show("Data Saved");
             else
