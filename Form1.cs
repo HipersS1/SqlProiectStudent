@@ -15,6 +15,8 @@ namespace SqlProiectStudent
 {
     public partial class Form1 : Form
     {
+        // comentariu
+        // comentariu 2
         SqlConnection connection;
         string strStudent, strMaterie;
         int ButtonTag;
